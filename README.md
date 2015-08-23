@@ -1,11 +1,12 @@
 # Chvart
-A C# port/fork of g.Raphael, built on top of vvvv/Svg 
+
+A C# port/fork of [g.Raphaël](https://github.com/DmitryBaranovskiy/g.raphael), built on top of [vvvv/SVG ](https://github.com/vvvv/SVG)
 
 
 
 ## License
 
-Based on [g.Raphael], which is:
+Based on [g.Raphaël](https://github.com/DmitryBaranovskiy/g.raphael), which is:
 
 > Copyright (c) 2009-2012 Dmitry Baranovskiy (http://g.raphaeljs.com)
 > Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
