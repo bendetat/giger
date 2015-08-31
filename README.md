@@ -1,14 +1,15 @@
-# Chvart
+# Vorticist
 
-A C# port/fork of [g.Raphaël](https://github.com/DmitryBaranovskiy/g.raphael), built on top of [vvvv/SVG ](https://github.com/vvvv/SVG)
-
+A C# library for generating SVG images.
 
 
 ## License
 
-Based on [g.Raphaël](https://github.com/DmitryBaranovskiy/g.raphael), which is:
+Copyright 2015 Ben Scott (and contributors)
 
-> Copyright (c) 2009-2012 Dmitry Baranovskiy (http://g.raphaeljs.com)
-> Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
+Licensed under the [MIT License][mit-license]
 
-For consistency, Chvart itself is also licensed under the MIT license.
+
+
+
+[mit-license]: https://raw.githubusercontent.com/bendetat/vorticist/master/LICENSE
