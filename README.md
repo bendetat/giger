@@ -1,4 +1,4 @@
-# Vorticist
+# Giger
 
 A C# library for generating SVG images.
 
