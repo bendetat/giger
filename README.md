@@ -5,4 +5,11 @@ A C# library for generating SVG images.
 
 ## License
 
-Apache License Version 2.0
+Copyright 2015 Ben Scott (and contributors)
+
+Licensed under the [MIT License][mit-license]
+
+
+
+
+[mit-license]: https://raw.githubusercontent.com/bendetat/vorticist/master/LICENSE
