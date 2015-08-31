@@ -99,7 +99,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PagesModule.cs" />
+    <Compile Include="Circles.cs" />
+    <Compile Include="Ellipses.cs" />
+    <Compile Include="Lines.cs" />
+    <Compile Include="Polygons.cs" />
+    <Compile Include="PolyLines.cs" />
+    <Compile Include="Rectangles.cs" />
+    <Compile Include="ExamplesModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

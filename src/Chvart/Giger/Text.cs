@@ -1,24 +1,26 @@
 ﻿using System.Xml;
+using Chvart.Raphael;
 
-namespace Chvart.Raphael
+namespace Chvart.Giger
 {
     public static partial class ChvartExtensions
     {
-        public static Text Text(this Chvart chvart, int x, int y, string text)
+        public static Text Text(this BaseElement element, double x, double y, string text)
         {
             var textElement = new Text(x, y, text);
 
-            chvart.AddChild(textElement);
+            element.AddChild(textElement);
 
             return textElement;
         }
     }
 
-    public class Text : Element
+    public class Text : Element<Text>
     {
-        public Text(int x, int y, string text)
+        public Text(double x, double y, string text)
+            : base(x, y, 0, 0)
         {
-            Attr(new
+            SetAttr(new
             {
                 x,
                 y,
@@ -30,14 +32,13 @@ namespace Chvart.Raphael
 
             AddChild(new TextSpan(text));
 
-            AddStyle("-webkit-tap-highlight-color", "rgba(0,0,0,0)");
-            AddStyle("text-anchor", "middle");
-            AddStyle("font-style", "normal");
-            AddStyle("font-variant", "normal");
-            AddStyle("font-weight", "normal");
-            AddStyle("font-stretch", "normal");
-            AddStyle("font-size", "12px");
-            AddStyle("font-style", "sans-serif");
+            WithStyle("text-anchor", "middle");
+            WithStyle("font-style", "normal");
+            WithStyle("font-variant", "normal");
+            WithStyle("font-weight", "normal");
+            WithStyle("font-stretch", "normal");
+            WithStyle("font-size", "12px");
+            WithStyle("font-style", "sans-serif");
         }
 
         protected override XmlNode GetXmlNode(XmlDocument doc)
@@ -50,7 +51,7 @@ namespace Chvart.Raphael
             if (key == "font")
             {
                 RemoveStyles(x => x.StartsWith("font-"));
-                AddStyle("font", value.ToString());
+                WithStyle("font", value.ToString());
             }
         }
     }

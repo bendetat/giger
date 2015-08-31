@@ -1,13 +1,14 @@
 ﻿using System.IO;
 using System.Xml;
+using Chvart.Giger;
 
-namespace Chvart
+namespace Chvart.Raphael
 {
-    public class Chvart : Element
+    public class Svg : Element<Svg>
     {
-        public Chvart()
+        public Svg() : base(0, 0, 0, 0)
         {
-            Attr(new
+            SetAttr(new
             {
                 height = 480,
                 width = 640,
@@ -21,7 +22,7 @@ namespace Chvart
             return doc.CreateElement("svg", "http://www.w3.org/2000/svg");
         }
 
-        public string ToSvg()
+        public override string ToString()
         {
             var doc = new XmlDocument();
             var xml = ToXml(doc);
@@ -29,7 +30,10 @@ namespace Chvart
             using (var stringWriter = new StringWriter())
             using (var xmlWriter = XmlWriter.Create(stringWriter))
             {
-                xml.WriteTo(xmlWriter);
+                foreach (var node in xml)
+                {
+                    node.WriteTo(xmlWriter);
+                }
                 xmlWriter.Flush();
 
                 return stringWriter.GetStringBuilder().ToString();

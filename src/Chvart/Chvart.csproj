@@ -55,16 +55,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bar.cs" />
-    <Compile Include="Chvart.cs" />
+    <Compile Include="Giger\BaseElement.cs" />
+    <Compile Include="Giger\Circle.cs" />
+    <Compile Include="Giger\Ellipse.cs" />
+    <Compile Include="Giger\FillRule.cs" />
+    <Compile Include="Giger\Line.cs" />
+    <Compile Include="Giger\Polygon.cs" />
+    <Compile Include="Giger\PolyLine.cs" />
+    <Compile Include="Plumbing\StringExtensions`Labelise.cs" />
+    <Compile Include="Giger\Paper.cs" />
+    <Compile Include="Giger\Rectangle.cs" />
+    <Compile Include="Giger\Svg.cs" />
     <Compile Include="Dot.cs" />
-    <Compile Include="Element.cs" />
+    <Compile Include="Giger\Element.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Pie.cs" />
     <Compile Include="Plumbing\ObjectExtensions`ToDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Raphael\Text.cs" />
-    <Compile Include="Raphael\TextNode.cs" />
-    <Compile Include="Raphael\TextSpan.cs" />
+    <Compile Include="Giger\Text.cs" />
+    <Compile Include="Giger\TextNode.cs" />
+    <Compile Include="Giger\TextSpan.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,12 +1,12 @@
 using System.Xml;
 
-namespace Chvart.Raphael
+namespace Chvart.Giger
 {
-    public class TextSpan : Element
+    public class TextSpan : Element<TextSpan>
     {
-        public TextSpan(string text)
+        public TextSpan(string text) : base(0,0,0,0)
         {
-            Attr(new{
+            SetAttr(new{
                 dy = 4,
                 style = "-webkit-tap-highlight-color: rgba(0,0,0,0);"
             });

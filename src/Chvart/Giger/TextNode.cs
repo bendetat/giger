@@ -1,12 +1,12 @@
 using System.Xml;
 
-namespace Chvart.Raphael
+namespace Chvart.Giger
 {
-    public class TextNode : Element
+    public class TextNode : Element<TextNode>
     {
         private readonly string _text;
 
-        public TextNode(string text)
+        public TextNode(string text) : base(0,0,0,0)
         {
             _text = text;
         }
