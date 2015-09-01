@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.Management;
 using System.Xml;
 
 namespace Giger
@@ -8,7 +9,7 @@ namespace Giger
     {
         protected readonly IList<BaseElement> Children = new List<BaseElement>();
 
-        protected BaseElement(double x, double y, double width, double height)
+        protected BaseElement(double? x, double? y, double? width, double? height)
         {
             X = x;
             Y = y;
@@ -17,15 +18,17 @@ namespace Giger
         }
 
         protected bool Removed { get; private set; }
-        public double X { get; private set; }
-        public double Y { get; private set; }
-        public double Width { get; private set; }
-        public double Height { get; private set; }
+        public double? X { get; private set; }
+        public double? Y { get; private set; }
+        public double? Width { get; private set; }
+        public double? Height { get; private set; }
         public abstract IEnumerable<XmlNode> ToXml(XmlDocument doc);
 
-        public void AddChild(BaseElement element)
+        public T AddChild<T>(T element) where T:BaseElement
         {
             Children.Add(element);
+
+            return element;
         }
 
         public void Remove()

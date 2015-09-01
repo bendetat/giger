@@ -86,6 +86,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="site\examples-w3schools.html" />
+    <Content Include="site\index.html" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -95,24 +97,36 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="barchart.html" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Circles.cs" />
-    <Compile Include="Ellipses.cs" />
-    <Compile Include="Lines.cs" />
-    <Compile Include="Polygons.cs" />
-    <Compile Include="PolyLines.cs" />
-    <Compile Include="Rectangles.cs" />
-    <Compile Include="ExamplesModule.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Examples\W3Schools\BlurEffectsModule.cs" />
+    <Compile Include="Examples\W3Schools\CirclesModule.cs" />
+    <Compile Include="Examples\W3Schools\DropShadowsModule.cs" />
+    <Compile Include="Examples\W3Schools\EllipsesModule.cs" />
+    <Compile Include="Examples\W3Schools\ExamplesModule.cs" />
+    <Compile Include="Examples\W3Schools\LinearGradientsModule.cs" />
+    <Compile Include="Examples\W3Schools\LinesModule.cs" />
+    <Compile Include="Examples\W3Schools\PathsModule.cs" />
+    <Compile Include="Examples\W3Schools\PolygonsModule.cs" />
+    <Compile Include="Examples\W3Schools\PolylinesModule.cs" />
+    <Compile Include="Examples\W3Schools\RadialGradientsModule.cs" />
+    <Compile Include="Examples\W3Schools\RectanglesModule.cs" />
+    <Compile Include="Examples\W3Schools\StrokingModule.cs" />
+    <Compile Include="Examples\W3Schools\TextModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="StaticModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Giger.Charts\Giger.Charts.csproj">
       <Project>{ed2f954a-cd79-45a9-8a0e-7ed63ea90d56}</Project>
       <Name>Giger.Charts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Giger.Nancy\Giger.Nancy.csproj">
+      <Project>{f79632fb-a061-41cb-8fac-24f885822791}</Project>
+      <Name>Giger.Nancy</Name>
     </ProjectReference>
     <ProjectReference Include="..\Giger\Giger.csproj">
       <Project>{3d19d044-0d55-4ffb-a18d-bac8b5f58e6e}</Project>

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giger.TestSite", "src\Giger
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giger.Charts", "src\Giger.Charts\Giger.Charts.csproj", "{ED2F954A-CD79-45A9-8A0E-7ED63EA90D56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giger.Nancy", "src\Giger.Nancy\Giger.Nancy.csproj", "{F79632FB-A061-41CB-8FAC-24F885822791}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{ED2F954A-CD79-45A9-8A0E-7ED63EA90D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED2F954A-CD79-45A9-8A0E-7ED63EA90D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED2F954A-CD79-45A9-8A0E-7ED63EA90D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F79632FB-A061-41CB-8FAC-24F885822791}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F79632FB-A061-41CB-8FAC-24F885822791}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F79632FB-A061-41CB-8FAC-24F885822791}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F79632FB-A061-41CB-8FAC-24F885822791}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

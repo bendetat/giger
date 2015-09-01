@@ -2,20 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Giger.Filters;
+using Giger.Gradients;
 using Giger.Plumbing;
+using Giger.Shapes;
+using Giger.Text;
 using Humanizer;
 
 namespace Giger
 {
     public abstract class Element<T> : BaseElement
-        where T: BaseElement
+        where T : BaseElement
     {
-        private readonly IDictionary<string, object> _attributes = new Dictionary<string, object>();
+        private readonly IDictionary<string, Attribute> _attributes = new Dictionary<string, Attribute>();
         private readonly IDictionary<string, string> _styles = new Dictionary<string, string>();
 
-        protected Element(double x, double y, double width, double height)
+        protected Element() : base(null, null, null, null)
+        {
+        }
+
+        protected Element(double? x, double? y, double? width, double? height)
             : base(x, y, width, height)
         {
+            SetAttr(new {x, y, width, height});
         }
 
         protected abstract XmlNode GetXmlNode(XmlDocument doc);
@@ -34,6 +43,11 @@ namespace Giger
                 throw new InvalidOperationException("Element must be translatable to an XML element");
             }
 
+            if (element is XmlElement && element.NamespaceURI != XmlDocumentExtensions.SvgNamespaceUri)
+            {
+                throw new InvalidOperationException($"The {element.Name} namespace should be \"{XmlDocumentExtensions.SvgNamespaceUri}\" but was \"{element.NamespaceURI}\"");
+            }
+
             if (element.Attributes != null)
             {
                 foreach (var attr in _attributes)
@@ -43,9 +57,9 @@ namespace Giger
                         continue;
                     }
 
-                    var attribute = doc.CreateAttribute(attr.Key.Underscore().Hyphenate());
+                    var attribute = doc.CreateAttribute(attr.Key, attr.Value.Namespace);
 
-                    attribute.Value = attr.Value.ToString();
+                    attribute.Value = attr.Value.Value.ToString();
 
                     element.Attributes.Append(attribute);
                 }
@@ -70,24 +84,30 @@ namespace Giger
 
         public T SetAttr(object attributes)
         {
-            foreach (var item in attributes.ToDictionary())
+            foreach (var item in attributes.ToDictionary().Where(x => x.Value != null))
             {
-                if (item.Key == "style")
-                {
-                    this.WithStyleFromCss(item.Value.ToString());
-                }
-                else
-                {
-                    _attributes[item.Key] = item.Value;
-                    AddingAttribute(item.Key, item.Value);
-                }
+                SetAttr(item.Key.Underscore().Hyphenate(), item.Value);
             }
 
             return this as T;
         }
 
-        protected virtual void AddingAttribute(string key, object value)
+        public T SetAttr(string name, object value, string @namespace = null)
         {
+            if (name == "style")
+            {
+                this.WithStyleFromCss(value.ToString());
+            }
+            else
+            {
+                _attributes[name] = new Attribute
+                {
+                    Value = value,
+                    Namespace = @namespace
+                };
+            }
+
+            return this as T;
         }
 
         protected T RemoveStyles(Func<string, bool> where)
@@ -128,17 +148,23 @@ namespace Giger
 
         public T WithFill(int red, int green, int blue)
         {
-            return WithStyle("fill", ToRgb(red, green, blue));
+            return SetAttr(new {fill = ToRgb(red, green, blue)});
+        }
+
+        public T WithFill<TGradient>(Gradient<TGradient> gradient)
+            where TGradient : Gradient<TGradient>
+        {
+            return SetAttr(new {fill = $"url(#{gradient.Id})"});
         }
 
         public T WithStrokeWidth(double strokeWidth)
         {
-            return this.WithStyle("stroke-width", strokeWidth);
+            return SetAttr(new {strokeWidth = strokeWidth});
         }
 
         public T WithStroke(int red, int green, int blue)
         {
-            return this.WithStyle("stroke", ToRgb(red, green, blue));
+            return SetAttr(new {stroke = ToRgb(red, green, blue)});
         }
 
         private static string ToRgb(int red, int green, int blue)
@@ -154,27 +180,27 @@ namespace Giger
         {
             ValidateOpacity(opacity);
 
-            return WithStyle("fill-opacity", opacity);
+            return SetAttr(new {fillOpacity = opacity});
         }
 
         public T WithFill(string fill)
         {
-            return WithStyle("fill", fill);
+            return SetAttr(new {fill = fill});
         }
 
         public T WithStroke(string stroke)
         {
-            return WithStyle("stroke", stroke);
+            return SetAttr(new {stroke = stroke});
         }
 
         public T WithStrokeOpacity(double opacity)
         {
             ValidateOpacity(opacity);
 
-            return WithStyle("stroke-opacity", opacity);
+            return SetAttr(new {strokeOpacity = opacity});
         }
 
-        static void ValidateOpacity(double opacity)
+        private static void ValidateOpacity(double opacity)
         {
             if (opacity < 0 || 1 < opacity) throw new ArgumentOutOfRangeException(nameof(opacity));
         }
@@ -183,25 +209,133 @@ namespace Giger
         {
             ValidateOpacity(opacity);
 
-            return WithStyle("opacity", opacity);
+            return SetAttr(new {opacity = opacity});
         }
 
         public T WithFillRule(FillRule fillRule)
         {
-            return WithStyle("fill-rule", fillRule.ToString().ToLower());
+            return SetAttr(new {fillRule = fillRule.ToString().ToLower()});
         }
 
-        public T SetPoints(Point[] points)
+        public T WithFontFamily(string fontFamily)
         {
-            SetX(points.Min(x => x.X));
-            SetY(points.Min(x => x.Y));
-            SetWidth(points.Max(x => x.X) - this.X);
-            SetHeight(points.Max(x => x.Y) - this.Y);
+            return SetAttr(new
+            {
+                fontFamily
+            });
+        }
+
+        public T WithTextAnchor(TextAnchor textAnchor)
+        {
+            return SetAttr(new
+            {
+                textAnchor = textAnchor.ToString().ToLower()
+            });
+        }
+
+        public T WithFontSize(double fontSize)
+        {
+            return SetAttr(new
+            {
+                fontSize = fontSize
+            });
+        }
+
+        public T WithFontSize(string fontSize)
+        {
+            return SetAttr(new {fontSize});
+        }
+
+        public T WithDx(double dx)
+        {
+            return SetAttr(new {dx});
+        }
+
+        public T WithDy(double dy)
+        {
+            return SetAttr(new {dy});
+        }
+
+        public T WithFontSizeAdjust(double fontSizeAdjust)
+        {
+            return SetAttr(new {fontSizeAdjust});
+        }
+
+        public T WithFontStretch(FontStretch fontStretch)
+        {
+            return SetAttr(new {fontStretch = fontStretch.ToString().ToLower()});
+        }
+
+        public T WithFontStyle(FontStyle fontStyle)
+        {
+            return SetAttr(new {fontStyle = fontStyle.ToString().ToLower()});
+        }
+
+        public T WithFontVariant(FontVariant fontVariant)
+        {
+            return SetAttr(new {fontVariant = fontVariant.ToString().ToLower()});
+        }
+
+        public T WithFontWeight(FontWeight fontWeight)
+        {
+            return SetAttr(new {fontWeight = fontWeight.ToString().ToLower()});
+        }
+
+        public T WithFontWeight(int fontWeight)
+        {
+            return SetAttr(new {fontWeight});
+        }
+
+        public T WithTransformRotate(double angle, double x = 0, double y = 0)
+        {
+            var existingTransform = GetAttrOrDefault("transform", "");
 
             return SetAttr(new
             {
-                points = string.Join(" ", points.Select(x => $"{x.X},{x.Y}"))
+                transform = $"{existingTransform} rotate({angle} {x}, {y})"
             });
+        }
+
+        protected string GetAttrOrDefault(string key, string @default)
+        {
+            return _attributes.ContainsKey(key) ? _attributes[key].Value.ToString() : @default;
+        }
+
+        public T WithStrokeLinecap(StrokeLinecap strokeLinecap)
+        {
+            return SetAttr(new
+            {
+                strokeLinecap = strokeLinecap.ToString().ToLower()
+            });
+        }
+
+        public T WithStrokeDasharray(params double[] dashArray)
+        {
+            return SetAttr(new
+            {
+                strokeDasharray = string.Join(" ", dashArray.Select(x => x.ToString()))
+            });
+        }
+
+        public T WithFilter(Filter filter)
+        {
+            return SetAttr("filter", $"url(#{filter.Id})");
+        }
+
+        public T WithWidth(string width)
+        {
+            return SetAttr(new {width});
+        }
+
+        public T WithHeight(string height)
+        {
+            return SetAttr(new {height});
+        }
+
+        private class Attribute
+        {
+            public object Value { get; set; }
+            public string Namespace { get; set; }
         }
     }
 }
