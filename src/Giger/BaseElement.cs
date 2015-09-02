@@ -31,6 +31,14 @@ namespace Giger
             return element;
         }
 
+        public void AddChildren(IEnumerable<BaseElement> children)
+        {
+            foreach (var child in children)
+            {
+                Children.Add(child);
+            }
+        }
+
         public void Remove()
         {
             Removed = true;

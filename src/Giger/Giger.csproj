@@ -63,7 +63,9 @@
     <Compile Include="Gradients\GradientStop.cs" />
     <Compile Include="Gradients\LinearGradient.cs" />
     <Compile Include="Gradients\RadialGradient.cs" />
+    <Compile Include="IManualDraw.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="NoopElement.cs" />
     <Compile Include="Text\Anchor.cs" />
     <Compile Include="BaseElement.cs" />
     <Compile Include="Shapes\Circle.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="Shapes\FillRule.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterEffect.cs" />
+    <Compile Include="Text\FontFamilies.cs" />
     <Compile Include="Text\FontStretch.cs" />
     <Compile Include="Text\FontStyle.cs" />
     <Compile Include="Text\FontVariant.cs" />
@@ -84,7 +87,6 @@
     <Compile Include="Shapes\Polygon.cs" />
     <Compile Include="Shapes\Polyline.cs" />
     <Compile Include="Plumbing\StringExtensions`Labelise.cs" />
-    <Compile Include="Paper.cs" />
     <Compile Include="Shapes\Rectangle.cs" />
     <Compile Include="Shapes\StrokeLinecap.cs" />
     <Compile Include="Svg.cs" />

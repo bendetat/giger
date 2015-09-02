@@ -31,6 +31,13 @@ namespace Giger
 
         public override IEnumerable<XmlNode> ToXml(XmlDocument doc)
         {
+            var manualDraw = this as IManualDraw<T>;
+            if (manualDraw != null)
+            {
+                this.Children.Clear();
+                manualDraw.Draw();
+            }
+
             if (Removed)
             {
                 yield break;
@@ -146,23 +153,23 @@ namespace Giger
             return this as T;
         }
 
-        public T WithFill(int red, int green, int blue)
+        public virtual T WithFill(int red, int green, int blue)
         {
             return SetAttr(new {fill = ToRgb(red, green, blue)});
         }
 
-        public T WithFill<TGradient>(Gradient<TGradient> gradient)
+        public virtual T WithFill<TGradient>(Gradient<TGradient> gradient)
             where TGradient : Gradient<TGradient>
         {
             return SetAttr(new {fill = $"url(#{gradient.Id})"});
         }
 
-        public T WithStrokeWidth(double strokeWidth)
+        public virtual T WithStrokeWidth(double strokeWidth)
         {
             return SetAttr(new {strokeWidth = strokeWidth});
         }
 
-        public T WithStroke(int red, int green, int blue)
+        public virtual T WithStroke(int red, int green, int blue)
         {
             return SetAttr(new {stroke = ToRgb(red, green, blue)});
         }
@@ -176,24 +183,24 @@ namespace Giger
             return $"rgb({red}, {green}, {blue})";
         }
 
-        public T WithFillOpacity(double opacity)
+        public virtual T WithFillOpacity(double opacity)
         {
             ValidateOpacity(opacity);
 
             return SetAttr(new {fillOpacity = opacity});
         }
 
-        public T WithFill(string fill)
+        public virtual T WithFill(string fill)
         {
             return SetAttr(new {fill = fill});
         }
 
-        public T WithStroke(string stroke)
+        public virtual T WithStroke(string stroke)
         {
             return SetAttr(new {stroke = stroke});
         }
 
-        public T WithStrokeOpacity(double opacity)
+        public virtual T WithStrokeOpacity(double opacity)
         {
             ValidateOpacity(opacity);
 
@@ -205,19 +212,19 @@ namespace Giger
             if (opacity < 0 || 1 < opacity) throw new ArgumentOutOfRangeException(nameof(opacity));
         }
 
-        public T WithOpacity(double opacity)
+        public virtual T WithOpacity(double opacity)
         {
             ValidateOpacity(opacity);
 
             return SetAttr(new {opacity = opacity});
         }
 
-        public T WithFillRule(FillRule fillRule)
+        public virtual T WithFillRule(FillRule fillRule)
         {
             return SetAttr(new {fillRule = fillRule.ToString().ToLower()});
         }
 
-        public T WithFontFamily(string fontFamily)
+        public virtual T WithFontFamily(string fontFamily)
         {
             return SetAttr(new
             {
@@ -225,7 +232,7 @@ namespace Giger
             });
         }
 
-        public T WithTextAnchor(TextAnchor textAnchor)
+        public virtual T WithTextAnchor(TextAnchor textAnchor)
         {
             return SetAttr(new
             {
@@ -233,7 +240,7 @@ namespace Giger
             });
         }
 
-        public T WithFontSize(double fontSize)
+        public virtual T WithFontSize(double fontSize)
         {
             return SetAttr(new
             {
@@ -241,52 +248,52 @@ namespace Giger
             });
         }
 
-        public T WithFontSize(string fontSize)
+        public virtual T WithFontSize(string fontSize)
         {
             return SetAttr(new {fontSize});
         }
 
-        public T WithDx(double dx)
+        public virtual T WithDx(double dx)
         {
             return SetAttr(new {dx});
         }
 
-        public T WithDy(double dy)
+        public virtual T WithDy(double dy)
         {
             return SetAttr(new {dy});
         }
 
-        public T WithFontSizeAdjust(double fontSizeAdjust)
+        public virtual T WithFontSizeAdjust(double fontSizeAdjust)
         {
             return SetAttr(new {fontSizeAdjust});
         }
 
-        public T WithFontStretch(FontStretch fontStretch)
+        public virtual T WithFontStretch(FontStretch fontStretch)
         {
             return SetAttr(new {fontStretch = fontStretch.ToString().ToLower()});
         }
 
-        public T WithFontStyle(FontStyle fontStyle)
+        public virtual T WithFontStyle(FontStyle fontStyle)
         {
             return SetAttr(new {fontStyle = fontStyle.ToString().ToLower()});
         }
 
-        public T WithFontVariant(FontVariant fontVariant)
+        public virtual T WithFontVariant(FontVariant fontVariant)
         {
             return SetAttr(new {fontVariant = fontVariant.ToString().ToLower()});
         }
 
-        public T WithFontWeight(FontWeight fontWeight)
+        public virtual T WithFontWeight(FontWeight fontWeight)
         {
             return SetAttr(new {fontWeight = fontWeight.ToString().ToLower()});
         }
 
-        public T WithFontWeight(int fontWeight)
+        public virtual T WithFontWeight(int fontWeight)
         {
             return SetAttr(new {fontWeight});
         }
 
-        public T WithTransformRotate(double angle, double x = 0, double y = 0)
+        public virtual T WithTransformRotate(double angle, double x = 0, double y = 0)
         {
             var existingTransform = GetAttrOrDefault("transform", "");
 
@@ -301,7 +308,7 @@ namespace Giger
             return _attributes.ContainsKey(key) ? _attributes[key].Value.ToString() : @default;
         }
 
-        public T WithStrokeLinecap(StrokeLinecap strokeLinecap)
+        public virtual T WithStrokeLinecap(StrokeLinecap strokeLinecap)
         {
             return SetAttr(new
             {
@@ -309,7 +316,7 @@ namespace Giger
             });
         }
 
-        public T WithStrokeDasharray(params double[] dashArray)
+        public virtual T WithStrokeDasharray(params double[] dashArray)
         {
             return SetAttr(new
             {
@@ -317,17 +324,17 @@ namespace Giger
             });
         }
 
-        public T WithFilter(Filter filter)
+        public virtual T WithFilter(Filter filter)
         {
             return SetAttr("filter", $"url(#{filter.Id})");
         }
 
-        public T WithWidth(string width)
+        public virtual T WithWidth(string width)
         {
             return SetAttr(new {width});
         }
 
-        public T WithHeight(string height)
+        public virtual T WithHeight(string height)
         {
             return SetAttr(new {height});
         }

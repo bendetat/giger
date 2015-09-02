@@ -2,7 +2,7 @@
 
 namespace Giger.Plumbing
 {
-    internal static class XmlDocumentExtensions
+    public static class XmlDocumentExtensions
     {
         public static string SvgNamespaceUri = "http://www.w3.org/2000/svg";
 
