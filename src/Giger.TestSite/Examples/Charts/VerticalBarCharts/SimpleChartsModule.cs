@@ -18,7 +18,7 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
                 });
                 var chart = svg.VerticalBarChart(data)
                     .WithDataLabelFormat("{0}%")
-                    .ShowDataLabelOutsideFingerThreshold();
+                    .ShowDataLabelOutsideItem();
 
                 return Response.AsSvg(svg);
             };
@@ -94,7 +94,7 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
                 });
                 var chart = svg.VerticalBarChart(data)
                     .WithDataLabelFormat("{0}%")
-                    .ShowDataLabelOutsideFingerThreshold()
+                    .ShowDataLabelOutsideItem()
                     .WithGutter(40)
                     .WithFill("#dddddd")
                     .WithPadding(40)
@@ -138,7 +138,7 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
                 });
                 var chart = svg.VerticalBarChart(data)
                     .WithDataLabelFormat("{0}%")
-                    .ShowDataLabelOutsideFingerThreshold()
+                    .ShowDataLabelOutsideItem()
                     .WithPointColorGenerator(new StackBasedDataPointColorGenerator(new[]
                     {
                         "#6666ff",
@@ -184,7 +184,7 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
                 });
                 var chart = svg.VerticalBarChart(data)
                     .WithDataLabelFormat("{0}%")
-                    .AlwaysShowDataLabelOutsidePointThreshold()
+                    .AlwaysShowDataLabel()
                     .WithPointColorGenerator(new StackBasedDataPointColorGenerator(new[]
                     {
                         "#6666ff",

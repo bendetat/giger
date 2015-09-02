@@ -45,6 +45,7 @@
     <Compile Include="BarCharts\BarChartStackData.cs" />
     <Compile Include="BarCharts\VerticalBarChart.cs" />
     <Compile Include="ChartDataPoint.cs" />
+    <Compile Include="Legends\GridLegend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

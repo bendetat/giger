@@ -34,8 +34,10 @@ namespace Giger
             var manualDraw = this as IManualDraw<T>;
             if (manualDraw != null)
             {
+                var children = this.Children.ToArray();
                 this.Children.Clear();
                 manualDraw.Draw();
+                this.AddChildren(children);
             }
 
             if (Removed)

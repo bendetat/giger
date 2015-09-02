@@ -86,6 +86,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="site\examples-grid-legends.html" />
     <Content Include="site\examples-vertical-bar-charts.html" />
     <Content Include="site\examples-w3schools.html" />
     <Content Include="site\index.html" />
@@ -102,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Examples\Charts\VerticalBarCharts\GridLegends.cs" />
     <Compile Include="Examples\Charts\VerticalBarCharts\SimpleChartsModule.cs" />
     <Compile Include="Examples\W3Schools\BlurEffectsModule.cs" />
     <Compile Include="Examples\W3Schools\CirclesModule.cs" />
