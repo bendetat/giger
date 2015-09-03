@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<package> 
+	<metadata> 
+		<id>Giger.Nancy</id> 
+		<title>Giger.Nancy</title>
+		<version>0.0.0</version> 
+		<authors>Ben Scott</authors>
+		<description>Nancy response helper for Giger</description> 
+		<language>en-US</language>
+		<licenseUrl>https://raw.githubusercontent.com/bendetat/giger/master/LICENSE</licenseUrl>
+		<releaseNotes>https://github.com/bendetat/giger/releases</releaseNotes>
+		<projectUrl>https://github.com/bendetat/giger</projectUrl>
+		<dependencies>
+			<group>
+  				<dependency id="Giger" />
+  				<dependency id="Nancy" />
+			</group>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\release\Giger.Nancy.dll" target="lib\net451"/>
+	</files>
+</package>

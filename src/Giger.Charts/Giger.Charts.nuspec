@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<package> 
+	<metadata> 
+		<id>Giger.Charts</id> 
+		<title>Giger.Charts</title>
+		<version>0.0.0</version> 
+		<authors>Ben Scott</authors>
+		<description>Chart generation using Giger</description> 
+		<language>en-US</language>
+		<licenseUrl>https://raw.githubusercontent.com/bendetat/giger/master/LICENSE</licenseUrl>
+		<releaseNotes>https://github.com/bendetat/giger/releases</releaseNotes>
+		<projectUrl>https://github.com/bendetat/giger</projectUrl>
+		<dependencies>
+			<group>
+  				<dependency id="Giger" />
+			</group>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\release\Giger.Charts.dll" target="lib\net451"/>
+	</files>
+</package>

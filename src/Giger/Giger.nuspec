@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<package> 
+	<metadata> 
+		<id>Giger</id> 
+		<title>Giger</title>
+		<version>0.0.0</version> 
+		<authors>Ben Scott</authors>
+		<description>A native C# library for generating SVGs</description> 
+		<language>en-US</language>
+		<licenseUrl>https://raw.githubusercontent.com/bendetat/giger/master/LICENSE</licenseUrl>
+		<releaseNotes>https://github.com/bendetat/giger/releases</releaseNotes>
+		<projectUrl>https://github.com/bendetat/giger</projectUrl>
+		<dependencies>
+			<group>
+  				<dependency id="Humanizer" version="1.37.7" />
+  				<dependency id="Simplicity" version="1.0.0.0" />
+			</group>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\release\Giger.dll" target="lib\net451"/>
+	</files>
+</package>
