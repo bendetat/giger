@@ -4,6 +4,8 @@ A C# library for generating SVG images. Includes Giger.Charts, a chart generatio
 
 Giger is a native C# library that doesn't require using something like PhantomJS to generate SVG on the server, allowing generation and consumption (eg in a PDF generation library such as [Crispin](https://github.com/swxben/crispin)) in a server environment without GDI support such as Azure.
 
+See [release notes](release-notes.md) for release documentation.
+
 
 ## Giger features
 
@@ -17,14 +19,6 @@ Giger is a native C# library that doesn't require using something like PhantomJS
 	- labels on data points, groups and stacks
 	- multi-line labels for data points
 - Legends
-
-
-## TODO
-
-- [ ] Horizontal bar charts
-- [ ] Pie charts
-- [ ] Time series and line charts
-- [ ] ???
 
 
 ## SVG Specification implementation state
