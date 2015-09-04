@@ -8,8 +8,10 @@ using Giger.Shapes;
 
 namespace Giger
 {
-    public class Svg : Element<Svg>
+    public class Svg : Element<Svg>, IManualDraw<Svg>
     {
+        private string _backgroundFill;
+
         public Svg(double width = 640, double height = 480) : base(null, null, width, height)
         {
             Defs = new SvgDefs();
@@ -22,6 +24,27 @@ namespace Giger
         {
             return doc.CreateSvgElement("svg");
         }
+
+        public Svg Draw()
+        {
+            if (!string.IsNullOrWhiteSpace(_backgroundFill))
+            {
+                this.Rectangle(0, 0, Width, Height)
+                    .WithFill(_backgroundFill);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Get the width of this SVG
+        /// </summary>
+        public new double Width => base.Width ?? 0;
+
+        /// <summary>
+        /// Get the height of this SVG
+        /// </summary>
+        public new double Height => base.Height ?? 0;
 
         public override string ToString()
         {
@@ -254,6 +277,19 @@ namespace Giger
         public static Group MakeGroup()
         {
             return new Group();
+        }
+
+        /// <summary>
+        /// Set the background fill for this SVG. The fill is created by creating a rectangle
+        /// covering the SVG extents. WithFill() is used to cascade the fill to child elements.
+        /// </summary>
+        /// <param name="backgroundFill"></param>
+        /// <returns></returns>
+        public Svg WithBackgroundFill(string backgroundFill)
+        {
+            _backgroundFill = backgroundFill;
+
+            return this;
         }
     }
 }

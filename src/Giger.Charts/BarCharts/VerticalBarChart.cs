@@ -28,18 +28,22 @@ namespace Giger.Charts.BarCharts
         private string _dataLabelFormat = String.Empty;
         private double _fingerLabelHeight = 16;
         private double _stackLabelHeight = 16;
+        private double _dataPointLabelHeight = 16;
         private double _groupLabelHeight = 20;
         private string _dataLabelFill = "black";
         private string _groupLabelFill = "black";
         private string _stackLabelFill = "black";
+        private string _dataPointLabelFill = "black";
         private double _dataLabelWithinFingerThreshold = 20;
         private bool _showDataLabelOutsideFingerThreshold = false;
         private string _dataLabelFontFamily = FontFamilies.Helvetica;
+        private string _dataPointLabelFontFamily = FontFamilies.Helvetica;
         private string _stackLabelFontFamily = FontFamilies.Helvetica;
         private string _groupLabelFontFamily = FontFamilies.Helvetica;
         private double _dataLabelFontSize = 10;
         private double _stackLabelFontSize = 12;
         private double _groupLabelFontSize = 14;
+        private double _dataPointLabelFontSize = 10;
         private string _paperFill = "none";
         private string _drawableFill = "none";
         private string _stroke = "";
@@ -47,6 +51,8 @@ namespace Giger.Charts.BarCharts
         private IDataPointColorGenerator _fingerColorGenerator = new RandomDataPointColorGenerator();
         private bool _alwaysShowDataLabelOutsideFingerThreshold = false;
         private IDataPointColorGenerator _fingerLabelColorGenerator;
+        private bool _dataPointAutoLineSplit = false;
+        private int _dataPointLengthPerLine = 14;
 
         public VerticalBarChart(double width, double height, BarChartData data)
             : this(0, 0, width, height, data)
@@ -71,7 +77,8 @@ namespace Giger.Charts.BarCharts
             // Hard-code some extra bottom padding if there are any labels  - just enough for descenders (p, q, etc)
             var anyGroupLabels = _data.Groups.Any(x => !string.IsNullOrEmpty(x.Label));
             var anyStackLabels = _data.Groups.Any(g => g.Stacks.Any(s => !string.IsNullOrEmpty(s.Label)));
-            double extraBottomPadding = anyGroupLabels || anyStackLabels ? 4 : 0;
+            var anyDataPointLabels = _data.Groups.Any(g => g.Stacks.Any(s => s.DataPoints.Any(d => !string.IsNullOrEmpty(d.Label))));
+            double extraBottomPadding = anyGroupLabels || anyStackLabels || anyDataPointLabels ? 4 : 0;
 
             // Extra top padding if the data labels are always shown outside the finger threshold
             var extraTopPadding = _alwaysShowDataLabelOutsideFingerThreshold ? 16 : 0;
@@ -87,7 +94,8 @@ namespace Giger.Charts.BarCharts
 
             var groupLabelHeight = anyGroupLabels ? _groupLabelHeight : 0;
             var stackLabelHeight = anyStackLabels ? _stackLabelHeight : 0;
-            var chartHeight = drawableHeight - groupLabelHeight - stackLabelHeight;
+            var dataPointLabelHeight = GetMaxDataPointLabelHeight();
+            var chartHeight = drawableHeight - groupLabelHeight - stackLabelHeight - dataPointLabelHeight;
             var chartBottom = drawableTop + chartHeight;
             var groupCount = _data.Groups.Count();
             var stacksPerGroup = _data.Groups.Max(x => x.Stacks.Count());
@@ -105,17 +113,18 @@ namespace Giger.Charts.BarCharts
                     .WithFontSize(_groupLabelFontSize)
                 from stack in @group.Group.Stacks.Select((x, i) => new {Stack = x, Index = i})
                 let stackLeft = drawableLeft + widthPerGroup*@group.Index + _groupGutter*@group.Index + widthPerStack*stack.Index + _stackGutter*(stack.Index)
-                let stackLabel = this.Text(stackLeft + widthPerStack/2, chartBottom + stackLabelHeight, stack.Stack.Label)
+                let stackLabel = this.Text(stackLeft + widthPerStack/2, chartBottom + stackLabelHeight + dataPointLabelHeight, stack.Stack.Label)
                     .WithTextAnchor(TextAnchor.Middle)
                     .WithFill(_stackLabelFill)
                     .WithFontFamily(_stackLabelFontFamily)
                     .WithFontSize(_stackLabelFontSize)
                 from point in stack.Stack.DataPoints.Select((x, i) => new {Point = x, Index = i})
+                let dataPointLabel = AddChild(GetDataPointLabel(stackLeft, widthPerStack, chartBottom + 4, point.Point.Label))
                 let fingerBottom = chartBottom - stack.Stack.DataPoints.Take(point.Index).Sum(x => x.Value*heightPerValue)
                 let fingerTop = fingerBottom - point.Point.Value*heightPerValue
                 let finger = this.Rectangle(stackLeft, fingerTop, widthPerStack, fingerBottom - fingerTop)
                     .WithFill(_fingerColorGenerator.GenerateColor(@group.Index, stack.Index, point.Index, point.Point.Value))
-                let fingerLabel = GetFingerLabel(stackLeft, widthPerStack, fingerTop, fingerBottom - fingerTop, point.Point.Value, @group.Index, stack.Index, point.Index)
+                let fingerLabel = GetDataPointFingerLabel(stackLeft, widthPerStack, fingerTop, fingerBottom - fingerTop, point.Point.Value, @group.Index, stack.Index, point.Index)
                 select 0;
 
             fingers.ToArray();
@@ -123,7 +132,30 @@ namespace Giger.Charts.BarCharts
             return this;
         }
 
-        private BaseElement GetFingerLabel(double stackLeft, double widthPerStack, double fingerTop, double fingerHeight, double value, int groupIndex, int stackIndex, int pointIndex)
+        MultiLineText GetDataPointLabel(double stackLeft, double widthPerStack, double chartBottom, string label)
+        {
+            var element = new MultiLineText(stackLeft + widthPerStack/2, chartBottom, label)
+                .WithTextAnchor(TextAnchor.Middle)
+                .WithFill(_dataPointLabelFill)
+                .WithFontFamily(_dataPointLabelFontFamily)
+                .WithFontSize(_dataPointLabelFontSize)
+                .WithLineHeight(_dataPointLabelHeight);
+
+            if (_dataPointAutoLineSplit)
+            {
+                element.WithAutoLineSplit(_dataPointLengthPerLine);
+            }
+
+
+            return element;
+        }
+
+        double GetMaxDataPointLabelHeight()
+        {
+            return _data.Groups.Max(g => g.Stacks.Max(s => s.DataPoints.Max(p => GetDataPointLabel(1, 1, 1, p.Label).Height)));
+        }
+
+        private BaseElement GetDataPointFingerLabel(double stackLeft, double widthPerStack, double fingerTop, double fingerHeight, double value, int groupIndex, int stackIndex, int pointIndex)
         {
             if (string.IsNullOrEmpty(_dataLabelFormat))
             {
@@ -259,6 +291,84 @@ namespace Giger.Charts.BarCharts
         public VerticalBarChart WithRightGutter(double gutter)
         {
             _rightGutter = gutter;
+            return this;
+        }
+
+        public VerticalBarChart WithStackLabelFill(string stackLabelFill)
+        {
+            _stackLabelFill = stackLabelFill;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the fill for the data point label - shown at the bottom of the chart
+        /// (ChartDataPoint.Label)
+        /// </summary>
+        /// <param name="dataPointLabelFill"></param>
+        /// <returns></returns>
+        public VerticalBarChart WithDataPointLabelFill(string dataPointLabelFill)
+        {
+            _dataPointLabelFill = dataPointLabelFill;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the height of the data point label - shown at the bottom of the chart
+        /// (ChartDataPoint.Label)
+        /// </summary>
+        /// <param name="dataPointLabelHeight"></param>
+        /// <returns></returns>
+        public VerticalBarChart WithDataPointLabelHeight(double dataPointLabelHeight)
+        {
+            _dataPointLabelHeight = dataPointLabelHeight;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the font family for the data point label - shown at the bottom of the chart
+        /// (ChartDataPoint.Label)
+        /// </summary>
+        /// <param name="fontFamily"></param>
+        /// <returns></returns>
+        public VerticalBarChart WithDataPointLabelFontFamily(string fontFamily)
+        {
+            _dataPointLabelFontFamily = fontFamily;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the font size for the data point label - shown at the bottom of the chart
+        /// (ChartDataPoint.Label)
+        /// </summary>
+        /// <param name="fontSize"></param>
+        /// <returns></returns>
+        public VerticalBarChart WithDataPointLabelFontSize(double fontSize)
+        {
+            _dataPointLabelFontSize = fontSize;
+            return this;
+        }
+
+        /// <summary>
+        /// Automatically split data point labels into lines, using the length per
+        /// line as a guide (ChartDataPoint.Label)
+        /// </summary>
+        /// <param name="lengthPerLine"></param>
+        /// <returns></returns>
+        public VerticalBarChart WithDataPointAutoLineSplit(int lengthPerLine)
+        {
+            _dataPointAutoLineSplit = true;
+            _dataPointLengthPerLine = lengthPerLine;
+            return this;
+        }
+
+        /// <summary>
+        /// The gutter between groups of stacks - default is 40
+        /// </summary>
+        /// <param name="groupGutter"></param>
+        /// <returns></returns>
+        public VerticalBarChart WithGroupGutter(double groupGutter)
+        {
+            _groupGutter = 20;
             return this;
         }
     }
