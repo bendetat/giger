@@ -36,7 +36,7 @@ to the starry dynamo in the machinery of night
 even the monkey seems to want
 a little coat of straw";
 
-                svg.MultiLineText(svg.Width/2, 20, haiku)
+                svg.MultiLineText((svg.Width??0)/2, 20, haiku)
                     .WithTextAnchor(TextAnchor.Middle)
                     .WithFontStyle(FontStyle.Italic)
                     .WithFontFamily(FontFamilies.Helvetica);
@@ -89,7 +89,7 @@ thee. Is here all?";
 
                 var textElement = svg.MultiLineText(30, 40, text)
                     .WithAutoLineSplit(60);
-                svg.Line(textElement.X - 14, textElement.Y, textElement.X - 14, textElement.Y + textElement.Height)
+                svg.Line(textElement.X ?? 0 - 14, textElement.Y ?? 0, textElement.X ?? 0 - 14, textElement.Y ?? 0 + textElement.Height ?? 0)
                     .WithStroke("brown")
                     .WithStrokeLinecap(StrokeLinecap.Round)
                     .WithStrokeWidth(3);

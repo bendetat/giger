@@ -29,22 +29,12 @@ namespace Giger
         {
             if (!string.IsNullOrWhiteSpace(_backgroundFill))
             {
-                this.Rectangle(0, 0, Width, Height)
+                this.Rectangle(0, 0, Width ?? 0, Height ?? 0)
                     .WithFill(_backgroundFill);
             }
 
             return this;
         }
-
-        /// <summary>
-        /// Get the width of this SVG
-        /// </summary>
-        public new double Width => base.Width ?? 0;
-
-        /// <summary>
-        /// Get the height of this SVG
-        /// </summary>
-        public new double Height => base.Height ?? 0;
 
         public override string ToString()
         {

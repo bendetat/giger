@@ -54,21 +54,18 @@ namespace Giger.Text
             var textLines =
                 from line in Lines.Select((x, i) => new {Line = x, Index = i})
                 let lineY = this.Y + (line.Index)*_lineHeight + _lineHeight/2
-                select new Text(this.X, lineY, line.Line);
+                select new Text(this.X ?? 0, lineY ?? 0, line.Line);
 
             AddChildren(textLines);
 
             return this;
         }
 
-        public new double X => base.X ?? 0;
-        public new double Y => base.Y ?? 0;
-
         /// <summary>
         /// The height of the multi-line text element, calculated using the number of
         /// lines and the line height
         /// </summary>
-        public new double Height => Lines.Count()*_lineHeight;
+        public override double? Height => Lines.Count()*_lineHeight;
 
         /// <summary>
         /// Set the height per line (default is 24)

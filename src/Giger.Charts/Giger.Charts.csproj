@@ -43,8 +43,14 @@
     <Compile Include="BarCharts\BarChartData.cs" />
     <Compile Include="BarCharts\BarChartGroupData.cs" />
     <Compile Include="BarCharts\BarChartStackData.cs" />
+    <Compile Include="ColorGenerators\FixedDataPointColorGenerator.cs" />
+    <Compile Include="ColorGenerators\GroupBasedDataPointColorGenerator.cs" />
     <Compile Include="BarCharts\VerticalBarChart.cs" />
     <Compile Include="ChartDataPoint.cs" />
+    <Compile Include="ColorGenerators\IDataPointColorGenerator.cs" />
+    <Compile Include="ColorGenerators\PointBasedDataPointColorGenerator.cs" />
+    <Compile Include="ColorGenerators\RandomDataPointColorGenerator.cs" />
+    <Compile Include="ColorGenerators\StackBasedDataPointColorGenerator.cs" />
     <Compile Include="Legends\GridLegend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

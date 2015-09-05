@@ -1,5 +1,6 @@
 ﻿using Giger.Charts;
 using Giger.Charts.BarCharts;
+using Giger.Charts.ColorGenerators;
 using Giger.Nancy;
 using Nancy;
 
@@ -106,13 +107,11 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
                 return Response.AsSvg(svg);
             };
 
-            
-
             Get["/examples/charts/vertical-bar-charts/simple-charts/stack-based-color-generator"] = _ =>
             {
                 var svg = new Svg(600, 200);
 
-                var chart = svg.VerticalBarChart(GetIndustriesData())
+                var chart = svg.VerticalBarChart(DataSources.GetIndustriesData())
                     .WithDataLabelFormat("{0}%")
                     .ShowDataLabelOutsideItem()
                     .WithPointColorGenerator(new StackBasedDataPointColorGenerator(new[]
@@ -131,7 +130,7 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
             {
                 var svg = new Svg(600, 200);
 
-                var chart = svg.VerticalBarChart(GetIndustriesData())
+                var chart = svg.VerticalBarChart(DataSources.GetIndustriesData())
                     .WithDataLabelFormat("{0}%")
                     .AlwaysShowDataLabel()
                     .WithPointColorGenerator(new StackBasedDataPointColorGenerator(new[]
@@ -235,59 +234,13 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
             {
                 var svg = new Svg(600, 200);
 
-                svg.VerticalBarChart(GetRenewableEnergyData())
+                svg.VerticalBarChart(DataSources.GetRenewableEnergyData())
                     .WithDataPointAutoLineSplit(12)
                     .WithDataLabelFormat("{0:p}")
                     .AlwaysShowDataLabel();
 
                 return Response.AsSvg(svg);
             };
-        }
-
-        private static BarChartData GetRenewableEnergyData()
-        {
-            var data = new ChartDataPoint[]
-            {
-                new ChartDataPoint(0.0224, "Solar hot water"),
-                new ChartDataPoint(0.1497, "Hydroelectricity"),
-                new ChartDataPoint(0.3310, "Bioenergy - wood and woodwaste"),
-                new ChartDataPoint(0.0600, "Bioenergy - biogas and biofuels"),
-                new ChartDataPoint(0.3859, "Bioenergy - bagasse"),
-                new ChartDataPoint(0.0490, "Wind"),
-                new ChartDataPoint(0.0014, "Solar - solar electricity"),
-            };
-            return new BarChartData(data);
-        }
-
-        BarChartData GetIndustriesData()
-        {
-            return new BarChartData(new BarChartGroupData[]
-            {
-                    new BarChartGroupData(new double[]
-                    {
-                        27, 45
-                    }, "Fishing"),
-                    new BarChartGroupData(new double[]
-                    {
-                        0, 15
-                    }, "Mining"),
-                    new BarChartGroupData(new double[]
-                    {
-                        0, 10
-                    }, "Building"),
-                    new BarChartGroupData(new double[]
-                    {
-                        0, 5
-                    }, "Pharmaceutical"),
-                    new BarChartGroupData(new double[]
-                    {
-                        0, 20
-                    }, "Technology"),
-                    new BarChartGroupData(new double[]
-                    {
-                        73, 5
-                    }, "Farming"),
-            });
         }
     }
 }

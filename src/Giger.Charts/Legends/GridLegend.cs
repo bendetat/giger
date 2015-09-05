@@ -16,14 +16,11 @@ namespace Giger.Charts.Legends
         {
         }
 
-        public new double X => base.X ?? 0;
-        public new double Y => base.Y ?? 0;
-
         public GridLegend AddLegendItem(int row, int column, string fill, string title)
         {
             var item = new GridLegendItem(
-                this.X + column*ItemWidth, 
-                this.Y + row*ItemHeight, 
+                this.X ?? 0 + column*ItemWidth, 
+                this.Y ?? 0 + row*ItemHeight, 
                 fill, 
                 title,
                 _fontFamily,

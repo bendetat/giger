@@ -49,7 +49,7 @@ namespace Giger
 
             if (element == null)
             {
-                throw new InvalidOperationException("Element must be translatable to an XML element");
+                yield break;
             }
 
             if (element is XmlElement && element.NamespaceURI != XmlDocumentExtensions.SvgNamespaceUri)

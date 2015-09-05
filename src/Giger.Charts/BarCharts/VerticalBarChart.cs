@@ -5,6 +5,7 @@ using Giger.Plumbing;
 using Giger.Shapes;
 using Giger.Text;
 using System.Collections.Generic;
+using Giger.Charts.ColorGenerators;
 using Giger.Charts.Legends;
 
 namespace Giger.Charts.BarCharts
@@ -27,9 +28,9 @@ namespace Giger.Charts.BarCharts
         private double _stackGutter = 5;
         private string _dataLabelFormat = String.Empty;
         private double _fingerLabelHeight = 16;
-        private double _stackLabelHeight = 16;
+        private double _stackLabelLineHeight = 16;
         private double _dataPointLabelHeight = 16;
-        private double _groupLabelHeight = 20;
+        private double _groupLabelLineHeight = 16;
         private string _dataLabelFill = "black";
         private string _groupLabelFill = "black";
         private string _stackLabelFill = "black";
@@ -44,7 +45,7 @@ namespace Giger.Charts.BarCharts
         private double _stackLabelFontSize = 12;
         private double _groupLabelFontSize = 14;
         private double _dataPointLabelFontSize = 10;
-        private string _paperFill = "none";
+        private string _paperFill = "";
         private string _drawableFill = "none";
         private string _stroke = "";
         private double _strokeWidth = 0;
@@ -53,6 +54,10 @@ namespace Giger.Charts.BarCharts
         private IDataPointColorGenerator _fingerLabelColorGenerator;
         private bool _dataPointAutoLineSplit = false;
         private int _dataPointLengthPerLine = 14;
+        private bool _groupLabelAutoLineSplit = false;
+        private int _groupLabelLengthPerLine = 14;
+        private bool _stackLabelAutoLineSplit = false;
+        private int _stackLabelLengthPerLine = 14;
 
         public VerticalBarChart(double width, double height, BarChartData data)
             : this(0, 0, width, height, data)
@@ -68,11 +73,12 @@ namespace Giger.Charts.BarCharts
 
         public VerticalBarChart Draw()
         {
-            this
-                .Rectangle(X + _leftGutter, Y + _topGutter, Width - _leftGutter - _rightGutter, Height - _topGutter - _bottomGutter)
-                .WithFill(_paperFill)
-                .WithStroke(_stroke)
-                .WithStrokeWidth(_strokeWidth);
+            if (!string.IsNullOrEmpty(_paperFill))
+            {
+                this
+                    .Rectangle(X ?? 0 + _leftGutter, Y ?? 0 + _topGutter, Width ?? 0 - _leftGutter - _rightGutter, Height ?? 0 - _topGutter - _bottomGutter)
+                    .WithFill(_paperFill);
+            }
 
             // Hard-code some extra bottom padding if there are any labels  - just enough for descenders (p, q, etc)
             var anyGroupLabels = _data.Groups.Any(x => !string.IsNullOrEmpty(x.Label));
@@ -83,17 +89,17 @@ namespace Giger.Charts.BarCharts
             // Extra top padding if the data labels are always shown outside the finger threshold
             var extraTopPadding = _alwaysShowDataLabelOutsideFingerThreshold ? 16 : 0;
 
-            var drawableWidth = Width - _leftGutter - _rightGutter - _leftPadding - _rightPadding;
-            var drawableHeight = Height - _topGutter - _bottomGutter - _topPadding - _bottomPadding - extraBottomPadding - extraTopPadding;
-            var drawableLeft = X + _leftGutter + _leftPadding;
-            var drawableTop = Y + _topGutter + _topPadding + extraTopPadding;
+            var drawableWidth = Width ?? 0 - _leftGutter - _rightGutter - _leftPadding - _rightPadding;
+            var drawableHeight = Height ?? 0 - _topGutter - _bottomGutter - _topPadding - _bottomPadding - extraBottomPadding - extraTopPadding;
+            var drawableLeft = X ?? 0 + _leftGutter + _leftPadding;
+            var drawableTop = Y ?? 0 + _topGutter + _topPadding + extraTopPadding;
 
             this
                 .Rectangle(drawableLeft, drawableTop, drawableWidth, drawableHeight)
                 .WithFill(_drawableFill);
 
-            var groupLabelHeight = anyGroupLabels ? _groupLabelHeight : 0;
-            var stackLabelHeight = anyStackLabels ? _stackLabelHeight : 0;
+            var groupLabelHeight = GetMaxGroupLabelHeight();
+            var stackLabelHeight = GetMaxStackLabelHeight();
             var dataPointLabelHeight = GetMaxDataPointLabelHeight();
             var chartHeight = drawableHeight - groupLabelHeight - stackLabelHeight - dataPointLabelHeight;
             var chartBottom = drawableTop + chartHeight;
@@ -106,18 +112,10 @@ namespace Giger.Charts.BarCharts
 
             var fingers =
                 from @group in _data.Groups.Select((x, i) => new {Group = x, Index = i})
-                let groupLabel = this.Text(drawableLeft + ((widthPerGroup + _groupGutter)*@group.Index) + widthPerGroup/2, chartBottom + stackLabelHeight + groupLabelHeight, @group.Group.Label)
-                    .WithTextAnchor(TextAnchor.Middle)
-                    .WithFill(_groupLabelFill)
-                    .WithFontFamily(_groupLabelFontFamily)
-                    .WithFontSize(_groupLabelFontSize)
+                let groupLabel = AddChild(GetGroupLabel(drawableLeft, widthPerGroup, @group.Index, chartBottom, stackLabelHeight, @group.Group.Label))
                 from stack in @group.Group.Stacks.Select((x, i) => new {Stack = x, Index = i})
                 let stackLeft = drawableLeft + widthPerGroup*@group.Index + _groupGutter*@group.Index + widthPerStack*stack.Index + _stackGutter*(stack.Index)
-                let stackLabel = this.Text(stackLeft + widthPerStack/2, chartBottom + stackLabelHeight + dataPointLabelHeight, stack.Stack.Label)
-                    .WithTextAnchor(TextAnchor.Middle)
-                    .WithFill(_stackLabelFill)
-                    .WithFontFamily(_stackLabelFontFamily)
-                    .WithFontSize(_stackLabelFontSize)
+                let stackLabel = AddChild(GetStackLabel(stackLeft, widthPerStack, chartBottom, dataPointLabelHeight, stack.Stack.Label))
                 from point in stack.Stack.DataPoints.Select((x, i) => new {Point = x, Index = i})
                 let dataPointLabel = AddChild(GetDataPointLabel(stackLeft, widthPerStack, chartBottom + 4, point.Point.Label))
                 let fingerBottom = chartBottom - stack.Stack.DataPoints.Take(point.Index).Sum(x => x.Value*heightPerValue)
@@ -129,7 +127,55 @@ namespace Giger.Charts.BarCharts
 
             fingers.ToArray();
 
+            if (!string.IsNullOrEmpty(_stroke))
+            {
+                this
+                    .Rectangle(X ?? 0 + _leftGutter, Y ?? 0 + _topGutter, Width ?? 0 - _leftGutter - _rightGutter, Height ?? 0 - _topGutter - _bottomGutter)
+                    .WithFill("none")
+                    .WithStroke(_stroke)
+                    .WithStrokeWidth(_strokeWidth);
+            }
+
             return this;
+        }
+
+        BaseElement GetGroupLabel(double drawableLeft, double widthPerGroup, int index, double chartBottom, double stackLabelHeight, string label)
+        {
+            if (string.IsNullOrEmpty(label)) return new NoopElement();
+
+            var element = new MultiLineText(drawableLeft + ((widthPerGroup + _groupGutter)*index) + widthPerGroup/2, chartBottom + stackLabelHeight + 4, label)
+                .WithTextAnchor(TextAnchor.Middle)
+                .WithFill(_groupLabelFill)
+                .WithFontFamily(_groupLabelFontFamily)
+                .WithFontSize(_groupLabelFontSize)
+                .WithLineHeight(_groupLabelLineHeight);
+
+            if (_groupLabelAutoLineSplit)
+            {
+                element.WithAutoLineSplit(_groupLabelLengthPerLine);
+            }
+
+            return element;
+        }
+
+        BaseElement GetStackLabel(double stackLeft, double widthPerStack, double chartBottom, double dataPointLabelHeight, string label)
+        {
+            if (string.IsNullOrEmpty(label)) return new NoopElement();
+
+            var element = new MultiLineText(stackLeft + widthPerStack/2, chartBottom + dataPointLabelHeight + 4, label)
+                .WithTextAnchor(TextAnchor.Middle)
+                .WithFill(_stackLabelFill)
+                .WithFontFamily(_stackLabelFontFamily)
+                .WithFontSize(_stackLabelFontSize)
+                .WithLineHeight(_stackLabelLineHeight);
+
+
+            if (_stackLabelAutoLineSplit)
+            {
+                element.WithAutoLineSplit(_stackLabelLengthPerLine);
+            }
+
+            return element;
         }
 
         MultiLineText GetDataPointLabel(double stackLeft, double widthPerStack, double chartBottom, string label)
@@ -152,7 +198,17 @@ namespace Giger.Charts.BarCharts
 
         double GetMaxDataPointLabelHeight()
         {
-            return _data.Groups.Max(g => g.Stacks.Max(s => s.DataPoints.Max(p => GetDataPointLabel(1, 1, 1, p.Label).Height)));
+            return _data.Groups.Max(g => g.Stacks.Max(s => s.DataPoints.Max(p => GetDataPointLabel(1, 1, 1, p.Label).Height ?? 0)));
+        }
+
+        double GetMaxGroupLabelHeight()
+        {
+            return _data.Groups.Max(g => GetGroupLabel(1, 1, 1, 1, 1, g.Label).Height ?? 0);
+        }
+
+        double GetMaxStackLabelHeight()
+        {
+            return _data.Groups.Max(g => g.Stacks.Max(s => GetStackLabel(1, 1, 1, 1, s.Label).Height ?? 0));
         }
 
         private BaseElement GetDataPointFingerLabel(double stackLeft, double widthPerStack, double fingerTop, double fingerHeight, double value, int groupIndex, int stackIndex, int pointIndex)
@@ -181,11 +237,6 @@ namespace Giger.Charts.BarCharts
         {
             return doc.CreateSvgElement("g");
         }
-
-        public new double X => base.X ?? 0;
-        public new double Width => base.Width ?? 0;
-        public new double Y => base.Y ?? 0;
-        public new double Height => base.Height ?? 0;
 
         public VerticalBarChart WithGutter(double gutter)
         {
@@ -371,6 +422,32 @@ namespace Giger.Charts.BarCharts
             _groupGutter = 20;
             return this;
         }
+
+        /// <summary>
+        /// Automatically split group labels into lines, using the length per line as a guide
+        /// </summary>
+        /// <param name="lengthPerLine">Maximum characters per line</param>
+        /// <returns></returns>
+        public VerticalBarChart WithGroupLabelAutoLineSplit(int lengthPerLine)
+        {
+            _groupLabelAutoLineSplit = true;
+            _groupLabelLengthPerLine = lengthPerLine;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Automatically split stack labels into lines, using the length per line as a guide
+        /// </summary>
+        /// <param name="lengthPerLine">Maximum characters per line</param>
+        /// <returns></returns>
+        public VerticalBarChart WithStackLabelAutoLineSplit(int lengthPerLine)
+        {
+            _stackLabelAutoLineSplit = true;
+            _stackLabelLengthPerLine = lengthPerLine;
+
+            return this;
+        }
     }
 
     public static partial class BaseElementExtensions
@@ -399,79 +476,4 @@ namespace Giger.Charts.BarCharts
             return chart;
         }
     }
-
-    public interface IDataPointColorGenerator {
-    	string GenerateColor(int group, int stack, int point, double value);
-    }
-
-    public class FixedDataPointColorGenerator :IDataPointColorGenerator {
-    	readonly Func<string> _colorCallback;
-
-    	public FixedDataPointColorGenerator(string color) {
-    		_colorCallback = () => color;
-    	}
-
-    	public FixedDataPointColorGenerator(Func<string> colorCallback) {
-    		_colorCallback = colorCallback;
-    	}
-
-        public string GenerateColor(int group, int stack, int point, double value)
-		{
-			return _colorCallback();
-		}
-    }
-
-    public class RandomDataPointColorGenerator : IDataPointColorGenerator {
-        public string GenerateColor(int group, int stack, int point, double value)
-        {
-            var rand = new Random(group.GetHashCode() | stack.GetHashCode() | point.GetHashCode() | value.GetHashCode());
-
-            return $"rgb({rand.Next(0, 255)},{rand.Next(0, 255)},{rand.Next(0, 255)})";
-        } 
-    }
-
-    public class StackBasedDataPointColorGenerator  : IDataPointColorGenerator {
-        readonly string[] _colors;
-
-    	public StackBasedDataPointColorGenerator(IEnumerable<string> colors) {
-    		_colors = colors.ToArray();
-    	}
-
-    	public string GenerateColor(int group, int stack, int point, double value)
-    	{
-    		return _colors[stack % _colors.Count()];
-    	}
-    }
-
-    public class PointBasedDataPointColorGenerator : IDataPointColorGenerator
-    {
-        readonly string[] _colors;
-
-        public PointBasedDataPointColorGenerator(IEnumerable<string> colors)
-        {
-            _colors = colors.ToArray();
-        }
-
-        public string GenerateColor(int group, int stack, int point, double value)
-        {
-            return _colors[point % _colors.Count()];
-        }
-    }
-
-    public class GroupBasedDataPointColorGenerator : IDataPointColorGenerator
-    {
-        readonly string[] _colors;
-
-        public GroupBasedDataPointColorGenerator(IEnumerable<string> colors)
-        {
-            _colors = colors.ToArray();
-        }
-
-        public string GenerateColor(int group, int stack, int point, double value)
-        {
-            return _colors[group % _colors.Count()];
-        }
-    }
-
-
 }

@@ -18,14 +18,32 @@ namespace Giger
         }
 
         protected bool Removed { get; private set; }
-        public double? X { get; private set; }
-        public double? Y { get; private set; }
-        public double? Width { get; private set; }
-        public double? Height { get; private set; }
+
+        /// <summary>
+        /// Get the X position of this element's origin
+        /// </summary>
+        public virtual double? X { get; private set; }
+
+        /// <summary>
+        /// Get the Y position of this element's origin
+        /// </summary>
+        public virtual double? Y { get; private set; }
+        
+        /// <summary>
+        /// Get the width of this element
+        /// </summary>
+        public virtual double? Width { get; private set; }
+
+        /// <summary>
+        /// Get the height of this element
+        /// </summary>
+        public virtual double? Height { get; private set; }
+
         public abstract IEnumerable<XmlNode> ToXml(XmlDocument doc);
 
         public T AddChild<T>(T element) where T:BaseElement
         {
+
             Children.Add(element);
 
             return element;
