@@ -8,7 +8,7 @@
 		<description>Chart generation using Giger</description> 
 		<language>en-US</language>
 		<licenseUrl>https://raw.githubusercontent.com/bendetat/giger/master/LICENSE</licenseUrl>
-		<releaseNotes>https://github.com/bendetat/giger/releases</releaseNotes>
+		<releaseNotes>https://github.com/bendetat/giger/blob/master/release-notes.md</releaseNotes>
 		<projectUrl>https://github.com/bendetat/giger</projectUrl>
 		<dependencies>
 			<group>
