@@ -16,8 +16,7 @@ See [release notes](release-notes.md) for release documentation.
 
 - Vertical bar charts
 	- stacked and grouped data points
-	- labels on data points, groups and stacks
-	- multi-line labels for data points
+	- multi-line labels on data points, groups and stacks
 - Legends
 
 
