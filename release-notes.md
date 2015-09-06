@@ -1,5 +1,11 @@
 # Giger - Release notes
 
+## 0.3
+
+- Change a couple of namespaces
+- In vertical bar charts, make group and stack labels multiline
+
+
 ## 0.2
 
 - Multi-line text support
