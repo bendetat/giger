@@ -1,5 +1,10 @@
 # Giger - Release notes
 
+## 0.4
+
+- In vertical bar charts, setter methods for stack, group and point label font size
+
+
 ## 0.3
 
 - Change a couple of namespaces

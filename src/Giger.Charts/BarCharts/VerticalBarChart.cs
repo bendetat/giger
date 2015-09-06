@@ -391,13 +391,47 @@ namespace Giger.Charts.BarCharts
         /// Set the font size for the data point label - shown at the bottom of the chart
         /// (ChartDataPoint.Label)
         /// </summary>
-        /// <param name="fontSize"></param>
+        /// <param name="fontSize">Font size in ems</param>
         /// <returns></returns>
         public VerticalBarChart WithDataPointLabelFontSize(double fontSize)
         {
             _dataPointLabelFontSize = fontSize;
             return this;
         }
+
+        /// <summary>
+        /// Set the font size for the data label - shown with the data point
+        /// </summary>
+        /// <param name="dataLabelFontSize">Font size in ems</param>
+        /// <returns></returns>
+        public VerticalBarChart WithDataLabelFontSize(double dataLabelFontSize)
+        {
+            _dataLabelFontSize = dataLabelFontSize;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the font size for the stack label - shown at the bottom of the chart (BarChartStackData.Label)
+        /// </summary>
+        /// <param name="stackLabelFontSize">Font size in ems</param>
+        /// <returns></returns>
+        public VerticalBarChart WithStackLabelFontSize(double stackLabelFontSize)
+        {
+            _stackLabelFontSize = stackLabelFontSize;
+            return this;
+        }
+
+        /// <summary>
+        /// Set the font size for the group label - shown at the bottom of the chart (BarChartGroupData.Label)
+        /// </summary>
+        /// <param name="groupLabelFontSize">Font size in ems</param>
+        /// <returns></returns>
+        public VerticalBarChart WithGroupLabelFontSize(double groupLabelFontSize)
+        {
+            _groupLabelFontSize = groupLabelFontSize;
+            return this;
+        }
+
 
         /// <summary>
         /// Automatically split data point labels into lines, using the length per
