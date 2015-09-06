@@ -29,7 +29,7 @@ namespace Giger
         {
             if (!string.IsNullOrWhiteSpace(_backgroundFill))
             {
-                this.Rectangle(0, 0, Width ?? 0, Height ?? 0)
+                this.Rectangle(0, 0, (this.Width ?? 0), (this.Height ?? 0))
                     .WithFill(_backgroundFill);
             }
 

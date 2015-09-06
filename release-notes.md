@@ -1,5 +1,10 @@
 # Giger - Release notes
 
+## 0.4.1
+
+- Fix some calculations that were affecting label positioning and gutters
+
+
 ## 0.4
 
 - In vertical bar charts, setter methods for stack, group and point label font size

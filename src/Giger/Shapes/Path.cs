@@ -39,8 +39,8 @@ namespace Giger.Shapes
 
             SetX(GetAllPoints.Min(x => x.X));
             SetY(GetAllPoints.Min(x => x.Y));
-            SetWidth(GetAllPoints.Max(x => x.X) - (Width??0));
-            SetHeight(GetAllPoints.Max(x => x.Y) - (Height??0));
+            SetWidth(GetAllPoints.Max(x => x.X) - (Width ?? 0));
+            SetHeight(GetAllPoints.Max(x => x.Y) - (Height ?? 0));
 
             return this;
         }

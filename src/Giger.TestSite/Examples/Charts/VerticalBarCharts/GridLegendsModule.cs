@@ -42,7 +42,7 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
                     }))
                     // bottom gutter for legend
                     .WithBottomGutter(3*GridLegend.ItemHeight + 8);
-                chart.GridLegend(chart.X ?? 0 + (chart.Width ?? 0)/2 - GridLegend.ItemWidth, chart.Y ?? 0 + chart.Height ?? 0 - 3*GridLegend.ItemHeight + 8)
+                chart.GridLegend((chart.X ?? 0) + (chart.Width ?? 0)/2 - GridLegend.ItemWidth, (chart.Y ?? 0) + (chart.Height ?? 0) - 3*GridLegend.ItemHeight + 8)
                     .AddLegendItem(0, 0, "#990000", "Liberal")
                     .AddLegendItem(1, 0, "#000099", "Conservative")
                     .AddLegendItem(0, 1, "#009999", "Bloc Quebecois")
@@ -70,7 +70,7 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
                         "#990000", "#000099", "#009999", "#999900", "#999999"
                     }))
                     .WithGutter(20);
-                chart.GridLegend(chart.Width ?? 0 - GridLegend.ItemWidth*2 - 10, 10)
+                chart.GridLegend((chart.Width ?? 0) - GridLegend.ItemWidth*2 - 10, 10)
                     .AddLegendItem(0, 0, "#990000", "Liberal")
                     .AddLegendItem(1, 0, "#000099", "Conservative")
                     .AddLegendItem(0, 1, "#009999", "Bloc Quebecois")

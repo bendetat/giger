@@ -19,8 +19,8 @@ namespace Giger.Charts.Legends
         public GridLegend AddLegendItem(int row, int column, string fill, string title)
         {
             var item = new GridLegendItem(
-                this.X ?? 0 + column*ItemWidth, 
-                this.Y ?? 0 + row*ItemHeight, 
+                (this.X ?? 0) + column*ItemWidth, 
+                (this.Y ?? 0) + row*ItemHeight, 
                 fill, 
                 title,
                 _fontFamily,

@@ -76,7 +76,7 @@ namespace Giger.Charts.BarCharts
             if (!string.IsNullOrEmpty(_paperFill))
             {
                 this
-                    .Rectangle(X ?? 0 + _leftGutter, Y ?? 0 + _topGutter, Width ?? 0 - _leftGutter - _rightGutter, Height ?? 0 - _topGutter - _bottomGutter)
+                    .Rectangle((this.X ?? 0) + _leftGutter, (this.Y ?? 0) + _topGutter, (this.Width ?? 0) - _leftGutter - _rightGutter, (this.Height ?? 0) - _topGutter - _bottomGutter)
                     .WithFill(_paperFill);
             }
 
@@ -89,10 +89,10 @@ namespace Giger.Charts.BarCharts
             // Extra top padding if the data labels are always shown outside the finger threshold
             var extraTopPadding = _alwaysShowDataLabelOutsideFingerThreshold ? 16 : 0;
 
-            var drawableWidth = Width ?? 0 - _leftGutter - _rightGutter - _leftPadding - _rightPadding;
-            var drawableHeight = Height ?? 0 - _topGutter - _bottomGutter - _topPadding - _bottomPadding - extraBottomPadding - extraTopPadding;
-            var drawableLeft = X ?? 0 + _leftGutter + _leftPadding;
-            var drawableTop = Y ?? 0 + _topGutter + _topPadding + extraTopPadding;
+            var drawableWidth = (this.Width ?? 0) - _leftGutter - _rightGutter - _leftPadding - _rightPadding;
+            var drawableHeight = (this.Height ?? 0) - _topGutter - _bottomGutter - _topPadding - _bottomPadding - extraBottomPadding - extraTopPadding;
+            var drawableLeft = (this.X ?? 0) + _leftGutter + _leftPadding;
+            var drawableTop = (this.Y ?? 0) + _topGutter + _topPadding + extraTopPadding;
 
             this
                 .Rectangle(drawableLeft, drawableTop, drawableWidth, drawableHeight)
@@ -130,7 +130,7 @@ namespace Giger.Charts.BarCharts
             if (!string.IsNullOrEmpty(_stroke))
             {
                 this
-                    .Rectangle(X ?? 0 + _leftGutter, Y ?? 0 + _topGutter, Width ?? 0 - _leftGutter - _rightGutter, Height ?? 0 - _topGutter - _bottomGutter)
+                    .Rectangle((this.X ?? 0) + _leftGutter, (this.Y ?? 0) + _topGutter, (this.Width ?? 0) - _leftGutter - _rightGutter, (this.Height ?? 0) - _topGutter - _bottomGutter)
                     .WithFill("none")
                     .WithStroke(_stroke)
                     .WithStrokeWidth(_strokeWidth);
@@ -198,17 +198,17 @@ namespace Giger.Charts.BarCharts
 
         double GetMaxDataPointLabelHeight()
         {
-            return _data.Groups.Max(g => g.Stacks.Max(s => s.DataPoints.Max(p => GetDataPointLabel(1, 1, 1, p.Label).Height ?? 0)));
+            return _data.Groups.Max(g => g.Stacks.Max(s => (s.DataPoints.Max(p => GetDataPointLabel(1, 1, 1, p.Label).Height ?? 0))));
         }
 
         double GetMaxGroupLabelHeight()
         {
-            return _data.Groups.Max(g => GetGroupLabel(1, 1, 1, 1, 1, g.Label).Height ?? 0);
+            return _data.Groups.Max(g => (GetGroupLabel(1, 1, 1, 1, 1, g.Label).Height ?? 0));
         }
 
         double GetMaxStackLabelHeight()
         {
-            return _data.Groups.Max(g => g.Stacks.Max(s => GetStackLabel(1, 1, 1, 1, s.Label).Height ?? 0));
+            return _data.Groups.Max(g => g.Stacks.Max(s => (GetStackLabel(1, 1, 1, 1, s.Label).Height ?? 0)));
         }
 
         private BaseElement GetDataPointFingerLabel(double stackLeft, double widthPerStack, double fingerTop, double fingerHeight, double value, int groupIndex, int stackIndex, int pointIndex)

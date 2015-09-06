@@ -53,8 +53,8 @@ namespace Giger.Text
         {
             var textLines =
                 from line in Lines.Select((x, i) => new {Line = x, Index = i})
-                let lineY = this.Y + (line.Index)*_lineHeight + _lineHeight/2
-                select new Text(this.X ?? 0, lineY ?? 0, line.Line);
+                let lineY = (this.Y ?? 0) + (line.Index)*_lineHeight + _lineHeight/2
+                select new Text((this.X ?? 0), lineY, line.Line);
 
             AddChildren(textLines);
 

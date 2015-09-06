@@ -20,6 +20,13 @@ See [release notes](release-notes.md) for release documentation.
 - Legends
 
 
+## Roadmap for Version 1.0
+
+- [ ] Horizontal bar charts
+- [ ] Pie charts
+- [ ] github.io site, with examples and documentation
+
+
 ## SVG Specification implementation state
 
 The intention is to implement as much of the [SVG 1.1 Specification][svg-1.1-spec] (and any future versions) as possible, apart from features that are out of scope.
