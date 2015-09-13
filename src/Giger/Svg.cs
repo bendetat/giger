@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using Giger.Filters;
@@ -20,11 +21,6 @@ namespace Giger
 
         public SvgDefs Defs { get; }
 
-        protected override XmlNode GetXmlNode(XmlDocument doc)
-        {
-            return doc.CreateSvgElement("svg");
-        }
-
         public Svg Draw()
         {
             if (!string.IsNullOrWhiteSpace(_backgroundFill))
@@ -36,10 +32,36 @@ namespace Giger
             return this;
         }
 
+        protected override XmlNode GetXmlNode(XmlDocument doc)
+        {
+            return doc.CreateSvgElement("svg");
+        }
+
+        /// <summary>
+        /// Returns a string containing the SVG XML, including a DOCTYPE and XML declaration
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
+        {
+            return ToString(inline: false);
+        }
+
+        /// <summary>
+        /// Returns a string containing the SVG XML, without a DOCTYPE or XML declaration
+        /// for use inline.
+        /// </summary>
+        /// <returns></returns>
+        public string ToInlineSvgString()
+        {
+            return ToString(inline: true);
+        }
+
+        private string ToString(bool inline)
         {
             var doc = new XmlDocument();
             var xml = ToXml(doc);
+
+            if (inline) return xml.First().OuterXml;
 
             var writerSettings = new XmlWriterSettings()
             {
@@ -56,6 +78,7 @@ namespace Giger
                 {
                     node.WriteTo(xmlWriter);
                 }
+
                 xmlWriter.Flush();
 
                 return stringWriter.GetStringBuilder().ToString();
@@ -254,24 +277,14 @@ namespace Giger
             return new Filter(x, y, width, height);
         }
 
-        private class StringWriterWithEncoding : StringWriter
-        {
-            public StringWriterWithEncoding(Encoding encoding)
-            {
-                Encoding = encoding;
-            }
-
-            public override Encoding Encoding { get; }
-        }
-
         public static Group MakeGroup()
         {
             return new Group();
         }
 
         /// <summary>
-        /// Set the background fill for this SVG. The fill is created by creating a rectangle
-        /// covering the SVG extents. WithFill() is used to cascade the fill to child elements.
+        ///     Set the background fill for this SVG. The fill is created by creating a rectangle
+        ///     covering the SVG extents. WithFill() is used to cascade the fill to child elements.
         /// </summary>
         /// <param name="backgroundFill"></param>
         /// <returns></returns>
@@ -280,6 +293,16 @@ namespace Giger
             _backgroundFill = backgroundFill;
 
             return this;
+        }
+
+        private class StringWriterWithEncoding : StringWriter
+        {
+            public StringWriterWithEncoding(Encoding encoding)
+            {
+                Encoding = encoding;
+            }
+
+            public override Encoding Encoding { get; }
         }
     }
 }

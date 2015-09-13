@@ -1,5 +1,10 @@
 # Giger - Release notes
 
+## 0.5.0
+
+- Add `ToInlineSvgString()`, for returning the SVG as a string without a DOCTYPE or XML declaration, so it can be used inline
+
+
 ## 0.4.1
 
 - Fix some calculations that were affecting label positioning and gutters

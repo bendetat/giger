@@ -241,6 +241,22 @@ namespace Giger.TestSite.Examples.Charts.VerticalBarCharts
 
                 return Response.AsSvg(svg);
             };
+
+            Get["/examples/charts/vertical-bar-charts/simple-charts/as-inline-svg"] = _ =>
+            {
+                var svg = new Svg(200, 150);
+
+                var data = new BarChartData(new double[]
+                {
+                    50, 25, 5
+                });
+                var chart = svg.VerticalBarChart(data)
+                    .WithDataLabelFormat("{0}%")
+                    .ShowDataLabelOutsideItem();
+
+                return Response.AsText(svg.ToInlineSvgString());
+            };
+
         }
     }
 }
